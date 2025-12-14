@@ -5,13 +5,18 @@ import {
   getOfficerById,
   updateOfficer,
   deleteOfficer,
+  loginOfficier,
+  logoutOfficier,
 } from "../controllers/officer.controller.js";
+import { verifyOfficierJWT } from "../middleware/auth.js";
 
 const router = Router();
 
-router.route("/officers").post(createOfficer).get(getAllOfficers);
+router.route("/").post(createOfficer).get(verifyOfficierJWT, getAllOfficers);
+router.route("/login").post(loginOfficier);
+router.route("/logout").get(logoutOfficier);
 router
-  .route("/officers/:id")
+  .route("/:id")
   .get(getOfficerById)
   .patch(updateOfficer)
   .delete(deleteOfficer);

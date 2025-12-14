@@ -4,16 +4,21 @@ import {
   deleteComplainant,
   getAllComplainant,
   getComplainantById,
+  loginComplainant,
+  logoutComplainant,
   updateComplainant,
-} from "../controllers/complainant.controller";
+} from "../controllers/complainant.controller.js";
+import { verifyComplainantJWT } from "../middleware/auth.js";
 
 const router = Router();
 
-router.route("/complainants").post(createComplainant).get(getAllComplainant);
+router.route("/").post(createComplainant).get(getAllComplainant);
+router.route("/login").post(loginComplainant);
+router.route("/logout").get(logoutComplainant);
 
 router
-  .route("/complainants/:id")
-  .get(getComplainantById)
+  .route("/:id")
+  .get(verifyComplainantJWT, getComplainantById)
   .patch(updateComplainant)
   .delete(deleteComplainant);
 

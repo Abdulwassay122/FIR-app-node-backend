@@ -9,8 +9,8 @@ import {
 
 const router = Router();
 
-router.route("/arrests").post(createArrest);
-router.route("/firs/:firId/arrests").get(getArrestsByFIR);
-router.route("/arrests/:id").get(getArrestById).patch(updateArrest).delete(deleteArrest);
+router.route("/").post(createArrest);
+router.route("/firs/:firId").get(getArrestsByFIR);
+router.route("/:id").get(getArrestById).patch(updateArrest).delete(deleteArrest);
 
 export default router;

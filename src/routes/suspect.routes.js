@@ -10,12 +10,12 @@ import {
 
 const router = Router();
 
-router.route("/firs/:firId/suspects").post(createSuspect).get(getAllSuspects);
+router.route("/firs/:firId").post(createSuspect).get(getAllSuspects);
 router
-  .route("/suspects/:id")
+  .route("/:id")
   .get(getSuspectById)
   .patch(updateSuspect)
   .delete(deleteSuspect);
-router.route("/suspects/:id/verify").patch(verifySuspect);
+router.route("/:id/verify").patch(verifySuspect);
 
 export default router;

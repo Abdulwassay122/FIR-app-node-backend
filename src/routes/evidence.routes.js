@@ -7,7 +7,7 @@ import {
 
 const router = Router();
 
-router.route("/firs/:firId/evidence").post(uploadEvidence).get(getEvidenceByFIR);
-router.route("/evidence/:id").delete(deleteEvidence);
+router.route("/firs/:firId").post(uploadEvidence).get(getEvidenceByFIR);
+router.route("/:id").delete(deleteEvidence);
 
 export default router;

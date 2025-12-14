@@ -6,6 +6,6 @@ import {
 
 const router = Router();
 
-router.route("/firs/:firId/history").post(addHistory).get(getHistoryByFIR);
+router.route("/firs/:firId").post(addHistory).get(getHistoryByFIR);
 
 export default router;

@@ -5,10 +5,10 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(
-    cors({
-        origin: process.env.CORS_ORIGIN,
-        credentials: true,
-    })
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
 );
 
 app.use(express.json({ limit: "16kb" }));
@@ -18,18 +18,32 @@ app.use(cookieParser());
 
 //routes import
 import healthcheckRouter from "./routes/healthcheck.routes.js";
-
-
+import complainantRouter from "./routes/complainant.routes.js";
+import arrestRouter from "./routes/arrest.routes.js";
+import crimeRouter from "./routes/crime.routes.js";
+import evidenceRouter from "./routes/evidence.routes.js";
+import firRouter from "./routes/fir.routes.js";
+import historyRouter from "./routes/history.routes.js";
+import officerRouter from "./routes/officer.routes.js";
+import policeStationRouter from "./routes/policeStation.routes.js";
+import suspectRouter from "./routes/suspect.routes.js";
+import { ApiError } from "./utils/ApiError.js";
 
 //routes declaration
 app.use("/api/healthcheck", healthcheckRouter);
+app.use("/api/complainants", complainantRouter);
+app.use("/api/arrests", arrestRouter);
+app.use("/api/crime", crimeRouter);
+app.use("/api/evidence", evidenceRouter);
+app.use("/api/firs", firRouter);
+app.use("/api/history", historyRouter);
+app.use("/api/officers", officerRouter);
+app.use("/api/stations", policeStationRouter);
+app.use("/api/suspects", suspectRouter);
 
 
 
-
-
-
-export const globalErrorHandler = (err, req, res, next) => {
+const globalErrorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({
       statusCode: err.statusCode,
@@ -50,6 +64,5 @@ export const globalErrorHandler = (err, req, res, next) => {
 };
 
 app.use(globalErrorHandler);
-
 
 export { app };

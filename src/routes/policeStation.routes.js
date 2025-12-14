@@ -9,9 +9,9 @@ import {
 
 const router = Router();
 
-router.route("/stations").post(createStation).get(getAllStations);
+router.route("/").post(createStation).get(getAllStations);
 router
-  .route("/stations/:id")
+  .route("/:id")
   .get(getStationById)
   .patch(updateStation)
   .delete(deleteStation);

@@ -10,12 +10,12 @@ import {
 
 const router = Router();
 
-router.route("/firs").post(createFIR).get(getAllFIRs);
+router.route("/").post(createFIR).get(getAllFIRs);
 router
-  .route("/firs/:id")
+  .route("/:id")
   .get(getFIRById)
   .patch(updateFIR)
   .delete(deleteFIR);
-router.route("/firs/:id/status").patch(updateFIRStatus);
+router.route("/:id/status").patch(updateFIRStatus);
 
 export default router;

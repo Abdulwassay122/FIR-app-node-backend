@@ -6,7 +6,7 @@ dotenv.config({
   path: "./.env",
 });
 
-sequelize
+await sequelize
   .sync()
   .then(() => {
     app.listen(process.env.PORT || 8000, () => {
