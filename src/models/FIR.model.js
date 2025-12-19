@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import Complainant from "./Complainant.js";
-import Officer from "./Officer.js";
-import PoliceStation from "./PoliceStation.js";
-import CrimeType from "./CrimeType.js";
+import Complainant from "./Complainant.model.js";
+import Officer from "./Officer.model.js";
+import PoliceStation from "./PoliceStation.model.js";
+import CrimeType from "./CrimeType.model.js";
 import { UUIDV1 } from "sequelize";
 
 const FIR = sequelize.define("FIR", {

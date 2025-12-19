@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import CrimeCategory from "./CrimeCategory.js";
+import CrimeCategory from "./CrimeCategory.model.js";
 import { UUIDV1 } from "sequelize";
 
 const CrimeType = sequelize.define("CrimeType", {

@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import Suspect from "./Suspect.js";
-import FIR from "./FIR.js";
+import Suspect from "./Suspect.model.js";
+import FIR from "./FIR.model.js";
 import { UUIDV1 } from "sequelize";
-import Officer from "./Officer.js";
+import Officer from "./Officer.model.js";
 
 const Arrest = sequelize.define("Arrest", {
   arrest_id: {

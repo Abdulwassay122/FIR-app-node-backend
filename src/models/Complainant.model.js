@@ -1,7 +1,7 @@
 import { DataTypes,  UUIDV1 } from "sequelize";
 import sequelize from "../config/db.js";
 
-const Complainant = sequelize.define("Complainant", {
+const   Complainant = sequelize.define("Complainant", {
   complainant_id: {
     type: DataTypes.STRING,
     defaultValue: UUIDV1,

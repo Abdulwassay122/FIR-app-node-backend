@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import FIR from "./FIR.js";
+import FIR from "./FIR.model.js";
 import { UUIDV1 } from "sequelize";
 
 const CaseStatusHistory = sequelize.define("CaseStatusHistory", {
