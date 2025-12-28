@@ -6,6 +6,7 @@ import Complainant from "../models/Complainant.model.js";
 import Officer from "../models/Officer.model.js";
 import PoliceStation from "../models/PoliceStation.model.js";
 import CrimeType from "../models/CrimeType.model.js";
+import { Op } from "sequelize";
 
 /* =========================
    CREATE FIR
@@ -25,9 +26,12 @@ const createFIR = asyncHandler(async (req, res) => {
     if (!station_id) throw new ApiError(400, "Police Station ID is required");
     if (!type_id) throw new ApiError(400, "Crime Type ID is required");
     if (!description) throw new ApiError(400, "FIR description is required");
-    if (!location) throw new ApiError(400, "Location is required");
 
-    const complainant = await Complainant.findByPk(complainant_id);
+    const complainant = await Complainant.findOne({
+      where: {
+        [Op.or]: [{ complainant_id: complainant_id }, { cnic: complainant_id }],
+      },
+    });
     if (!complainant) throw new ApiError(404, "Complainant not found");
 
     if (officer_id) {
@@ -42,7 +46,7 @@ const createFIR = asyncHandler(async (req, res) => {
     if (!crimeType) throw new ApiError(404, "Crime type not found");
 
     const fir = await FIR.create({
-      complainant_id,
+      complainant_id: complainant.complainant_id,
       officer_id: officer_id || null,
       station_id,
       type_id,
@@ -66,14 +70,44 @@ const createFIR = asyncHandler(async (req, res) => {
 ========================= */
 const getAllFIRs = asyncHandler(async (req, res) => {
   try {
+    const { filters, search, sortField, sortOrder } = req.body;
+    console.log(filters, search, sortField, sortOrder);
+
+    // Build dynamic where clause
+    const whereClause = {};
+
+    // Apply exact filters if they have values
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        whereClause[key] = value;
+      }
+    });
+
+    // Apply search across multiple fields
+    if (search && search.trim() !== "") {
+      whereClause[Op.or] = [
+        { description: { [Op.like]: `%${search}%` } },
+        { location: { [Op.like]: `%${search}%` } },
+      ];
+    }
+
+    // Build dynamic order
+    const order = [];
+    if (sortField && sortOrder) {
+      order.push([sortField, sortOrder.toUpperCase()]);
+    } else {
+      order.push(["date_filed", "DESC"]); // default sort
+    }
+
     const firs = await FIR.findAll({
+      where: whereClause,
       include: [
         { model: Complainant },
         { model: Officer },
         { model: PoliceStation },
         { model: CrimeType },
       ],
-      order: [["date_filed", "DESC"]],
+      order,
     });
 
     return res
@@ -199,6 +233,34 @@ const deleteFIR = asyncHandler(async (req, res) => {
   }
 });
 
+const getUserFIR = asyncHandler(async (req, res) => {
+  try {
+    const complainant = req.complainant;
+    console.log(complainant)
+
+    const fir = await FIR.findAll({
+      where: {
+        complainant_id: complainant.complainant_id, // <-- your complainant_id
+      },
+      include: [
+        { model: Complainant },
+        { model: Officer },
+        { model: PoliceStation },
+        { model: CrimeType },
+      ],
+    });
+
+    if (!fir) throw new ApiError(404, "FIR not found");
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, fir, "FIR fetched successfully"));
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, error.message || "Failed to fetch FIR");
+  }
+});
+
 export {
   createFIR,
   getAllFIRs,
@@ -206,4 +268,5 @@ export {
   updateFIR,
   updateFIRStatus,
   deleteFIR,
+  getUserFIR,
 };

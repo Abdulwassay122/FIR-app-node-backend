@@ -1,26 +1,25 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, UUIDV4 } from "sequelize";
 import sequelize from "../config/db.js";
 import Suspect from "./Suspect.model.js";
 import FIR from "./FIR.model.js";
-import { UUIDV1 } from "sequelize";
 import Officer from "./Officer.model.js";
 
 const Arrest = sequelize.define("Arrest", {
   arrest_id: {
-    type: DataTypes.STRING,
-    defaultValue: UUIDV1,
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
     primaryKey: true,
   },
   suspect_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: Suspect, key: "suspect_id" },
   },
   fir_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: FIR, key: "fir_id" },
   },
   officer_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: Officer, key: "officer_id" },
   },
   arrest_date: { type: DataTypes.DATE },

@@ -1,12 +1,11 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [process.env.CORS_ORIGIN],
     credentials: true,
   })
 );
@@ -27,6 +26,8 @@ import historyRouter from "./routes/history.routes.js";
 import officerRouter from "./routes/officer.routes.js";
 import policeStationRouter from "./routes/policeStation.routes.js";
 import suspectRouter from "./routes/suspect.routes.js";
+import dashboard from "./routes/dashboard.routes.js";
+import ingest from "./routes/ingest.routes.js";
 import { ApiError } from "./utils/ApiError.js";
 
 //routes declaration
@@ -40,8 +41,8 @@ app.use("/api/history", historyRouter);
 app.use("/api/officers", officerRouter);
 app.use("/api/stations", policeStationRouter);
 app.use("/api/suspects", suspectRouter);
-
-
+app.use("/api/analytics", dashboard);
+app.use("/api/ingest", ingest)
 
 const globalErrorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {

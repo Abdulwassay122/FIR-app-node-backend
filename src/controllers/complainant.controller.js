@@ -140,29 +140,32 @@ const logoutComplainant = asyncHandler(async (req, res) => {
 
 const getAllComplainant = asyncHandler(async (req, res) => {
   try {
-    const complinants = await Complainant.findAll({
+    const { q } = req.query; // get q from query params
+    const whereClause = {};
+
+    if (q && q.trim() !== "") {
+      whereClause[Op.or] = [
+        { name: { [Op.like]: `%${q}%` } },
+        { email: { [Op.like]: `%${q}%` } },
+        { phone: { [Op.like]: `%${q}%` } },
+        { cnic: { [Op.like]: `%${q}%` } },
+        { address: { [Op.like]: `%${q}%` } },
+      ];
+    }
+
+    const complainants = await Complainant.findAll({
+      where: whereClause,
       attributes: { exclude: ["password"] },
     });
-
-    if (complinants.length === 0) {
-      throw new ApiError(400, "No Complainants Find.");
-    }
 
     return res
       .status(200)
       .json(
-        new ApiResponse(200, complinants, "Complainants fetched successfully.")
+        new ApiResponse(200, complainants, "Complainants fetched successfully")
       );
   } catch (error) {
     console.log(error);
-    if (error.message) {
-      throw new ApiError(500, error.message);
-    }
-    throw new ApiError(
-      500,
-      `Somthing went wrong while fetching complainant.`,
-      error
-    );
+    throw new ApiError(500, "Failed to fetch complainants");
   }
 });
 
@@ -302,6 +305,25 @@ const deleteComplainant = asyncHandler(async (req, res) => {
   }
 });
 
+const getComplainant = asyncHandler(async (req, res) => {
+  try {
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, req.complainant, "Complainant Found Successfully")
+      );
+  } catch (error) {
+    console.log(error);
+    if (error.message) {
+      throw new ApiError(500, error.message);
+    }
+    throw new ApiError(
+      500,
+      `Somthing went wrong while updating complainant.`,
+      error
+    );
+  }
+});
 export {
   createComplainant,
   getAllComplainant,
@@ -310,4 +332,5 @@ export {
   deleteComplainant,
   loginComplainant,
   logoutComplainant,
+  getComplainant,
 };

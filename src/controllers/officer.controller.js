@@ -198,6 +198,54 @@ const updateOfficer = asyncHandler(async (req, res) => {
   }
 });
 
+const searchOfficer = asyncHandler(async (req, res) => {
+  try {
+    const { q, name, badge_no, cnic, email, officer_rank, station_id } =
+      req.query;
+
+    const andConditions = [];
+
+    // Optional exact matches for separate params
+    if (name) andConditions.push({ name });
+    if (badge_no) andConditions.push({ badge_no });
+    if (cnic) andConditions.push({ cnic });
+    if (email) andConditions.push({ email });
+    if (officer_rank) andConditions.push({ officer_rank });
+    if (station_id) andConditions.push({ station_id });
+
+    // Single `q` search across multiple fields (partial match, any field)
+    if (q) {
+      andConditions.push({
+        [Op.or]: [
+          { officer_id: { [Op.like]: `%${q}%` } },
+          { name: { [Op.like]: `%${q}%` } },
+          { badge_no: { [Op.like]: `%${q}%` } },
+          { cnic: { [Op.like]: `%${q}%` } },
+          { email: { [Op.like]: `%${q}%` } },
+          { officer_rank: { [Op.like]: `%${q}%` } },
+        ],
+      });
+    }
+
+    const officers = await Officer.findAll({
+      where: andConditions.length ? { [Op.and]: andConditions } : undefined,
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: PoliceStation,
+          attributes: ["station_id", "name"],
+        },
+      ],
+    });
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, officers, "Officers fetched successfully"));
+  } catch (error) {
+    throw new ApiError(500, error.message || "Search failed");
+  }
+});
+
 const deleteOfficer = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
@@ -218,6 +266,33 @@ const deleteOfficer = asyncHandler(async (req, res) => {
   }
 });
 
+const getOfficer = asyncHandler(async (req, res) => {
+  try {
+    const officer = await Officer.findByPk(req.officer.officer_id, {
+      include: [
+        {
+          model: PoliceStation,
+          attributes: ["station_id", "name", "city"],
+        },
+      ],
+    });
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, officer, "Officer Found Successfully"));
+  } catch (error) {
+    console.log(error);
+    if (error.message) {
+      throw new ApiError(500, error.message);
+    }
+    throw new ApiError(
+      500,
+      `Somthing went wrong while fetching Officer.`,
+      error
+    );
+  }
+});
+
 export {
   createOfficer,
   getAllOfficers,
@@ -226,4 +301,6 @@ export {
   deleteOfficer,
   loginOfficier,
   logoutOfficier,
+  searchOfficer,
+  getOfficer,
 };

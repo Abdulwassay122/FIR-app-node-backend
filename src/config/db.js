@@ -1,9 +1,14 @@
 import { Sequelize } from "sequelize";
 
-const sequelize = new Sequelize("FIRManagemntSystem", "root", "mysql1000cc", {
-  host: "localhost",
-  dialect: "mysql",
-  logging: false,
+const sequelize = new Sequelize(process.env.POSTGRES_URI, {
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  },
+  logging: false
 });
 
 export default sequelize;

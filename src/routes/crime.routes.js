@@ -11,8 +11,11 @@ import {
   updateType,
   deleteType,
 } from "../controllers/crime.controller.js";
+import { verifyOfficierJWT } from "../middleware/auth.js";
 
 const router = Router();
+
+router.use(verifyOfficierJWT)
 
 // Category
 router.route("/crime-categories").post(createCategory).get(getAllCategories);

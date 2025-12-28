@@ -1,10 +1,10 @@
-import { DataTypes,  UUIDV1 } from "sequelize";
+import { DataTypes, UUIDV4 } from "sequelize";
 import sequelize from "../config/db.js";
 
-const   Complainant = sequelize.define("Complainant", {
+const Complainant = sequelize.define("Complainant", {
   complainant_id: {
-    type: DataTypes.STRING,
-    defaultValue: UUIDV1,
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
     primaryKey: true,
   },
   name: { type: DataTypes.STRING, allowNull: false },

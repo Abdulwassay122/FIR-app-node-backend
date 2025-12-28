@@ -1,16 +1,16 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 import FIR from "./FIR.model.js";
-import { UUIDV1 } from "sequelize";
+import { UUIDV4 } from "sequelize";
 
 const CaseStatusHistory = sequelize.define("CaseStatusHistory", {
   history_id: {
-    type: DataTypes.STRING,
-    defaultValue: UUIDV1,
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
     primaryKey: true,
   },
   fir_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: FIR, key: "fir_id" },
   },
   date_filed: { type: DataTypes.DATE },

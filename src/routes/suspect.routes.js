@@ -7,15 +7,19 @@ import {
   verifySuspect,
   deleteSuspect,
 } from "../controllers/suspect.controller.js";
+import { verifyAnyUserJWT, verifyOfficierJWT } from "../middleware/auth.js";
 
 const router = Router();
 
-router.route("/firs/:firId").post(createSuspect).get(getAllSuspects);
+router
+  .route("/firs/:firId")
+  .post(verifyOfficierJWT, createSuspect)
+  .get(verifyAnyUserJWT, getAllSuspects);
 router
   .route("/:id")
-  .get(getSuspectById)
-  .patch(updateSuspect)
-  .delete(deleteSuspect);
-router.route("/:id/verify").patch(verifySuspect);
+  .get(verifyOfficierJWT, getSuspectById)
+  .patch(verifyOfficierJWT, updateSuspect)
+  .delete(verifyOfficierJWT, deleteSuspect);
+router.route("/:id/verify").patch(verifyOfficierJWT, verifySuspect);
 
 export default router;

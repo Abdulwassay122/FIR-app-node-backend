@@ -1,16 +1,16 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 import PoliceStation from "./PoliceStation.model.js";
-import { UUIDV1 } from "sequelize";
+import { UUIDV4 } from "sequelize";
 
 const Officer = sequelize.define("Officer", {
   officer_id: {
-    type: DataTypes.STRING,
-    defaultValue: UUIDV1,
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
     primaryKey: true,
   },
   station_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: PoliceStation, key: "station_id" },
   },
   name: { type: DataTypes.STRING, allowNull: false },

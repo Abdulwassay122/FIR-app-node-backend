@@ -1,10 +1,11 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {ApiError} from "../utils/ApiError.js";
-import {ApiResponse} from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import Arrest from "../models/Arrest.model.js";
 import FIR from "../models/FIR.model.js";
 import Suspect from "../models/Suspect.model.js";
 import Officer from "../models/Officer.model.js";
+import { Op } from "sequelize";
 
 /* =========================
    CREATE ARREST
@@ -13,26 +14,31 @@ const createArrest = asyncHandler(async (req, res) => {
   try {
     const { suspect_id, fir_id, officer_id, description } = req.body;
 
-    if (!suspect_id)
-      throw new ApiError(400, "Suspect ID is required");
-    if (!fir_id)
-      throw new ApiError(400, "FIR ID is required");
-    if (!officer_id)
-      throw new ApiError(400, "Officer ID is required");
+    if (!suspect_id) throw new ApiError(400, "Suspect ID is required");
+    if (!fir_id) throw new ApiError(400, "FIR ID is required");
+    if (!officer_id) throw new ApiError(400, "Officer ID is required");
 
-    const suspect = await Suspect.findByPk(suspect_id);
+    const suspect = await Suspect.findOne({
+      where: {
+        [Op.or]: [{ suspect_id: suspect_id }, { cnic: suspect_id }],
+      },
+    });
     if (!suspect) throw new ApiError(404, "Suspect not found");
 
     const fir = await FIR.findByPk(fir_id);
     if (!fir) throw new ApiError(404, "FIR not found");
 
-    const officer = await Officer.findByPk(officer_id);
+    const officer = await Officer.findOne({
+      where: {
+        [Op.or]: [{ officer_id: officer_id }, { cnic: officer_id }],
+      },
+    });
     if (!officer) throw new ApiError(404, "Officer not found");
 
     const arrest = await Arrest.create({
-      suspect_id,
+      suspect_id: suspect.suspect_id,
       fir_id,
-      officer_id,
+      officer_id: officer.officer_id,
       arrest_date: new Date(),
       description: description || "",
     });
@@ -58,10 +64,7 @@ const getArrestsByFIR = asyncHandler(async (req, res) => {
 
     const arrests = await Arrest.findAll({
       where: { fir_id: firId },
-      include: [
-        { model: Suspect },
-        { model: Officer },
-      ],
+      include: [{ model: Suspect }, { model: Officer }],
       order: [["arrest_date", "DESC"]],
     });
 
@@ -82,11 +85,7 @@ const getArrestById = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
     const arrest = await Arrest.findByPk(id, {
-      include: [
-        { model: Suspect },
-        { model: FIR },
-        { model: Officer },
-      ],
+      include: [{ model: Suspect }, { model: FIR }, { model: Officer }],
     });
 
     if (!arrest) throw new ApiError(404, "Arrest record not found");

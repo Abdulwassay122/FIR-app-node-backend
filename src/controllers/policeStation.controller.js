@@ -1,7 +1,9 @@
+import { Op } from "sequelize";
 import PoliceStation from "../models/PoliceStation.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import Officer from "../models/Officer.model.js";
 
 const createStation = asyncHandler(async (req, res) => {
   try {
@@ -30,7 +32,24 @@ const createStation = asyncHandler(async (req, res) => {
 
 const getAllStations = asyncHandler(async (req, res) => {
   try {
-    const stations = await PoliceStation.findAll();
+    const { q } = req.query;
+    const andConditions = [];
+
+    // Single `q` search across multiple fields (partial match, any field)
+    if (q) {
+      andConditions.push({
+        [Op.or]: [
+          { name: { [Op.like]: `%${q}%` } },
+          { district: { [Op.like]: `%${q}%` } },
+          { city: { [Op.like]: `%${q}%` } },
+          { province: { [Op.like]: `%${q}%` } },
+        ],
+      });
+    }
+
+    const stations = await PoliceStation.findAll({
+      where: andConditions.length ? { [Op.and]: andConditions } : undefined,
+    });
 
     return res
       .status(200)
@@ -109,6 +128,7 @@ const deleteStation = asyncHandler(async (req, res) => {
     throw new ApiError(500, error.message || "Failed to delete police station");
   }
 });
+
 
 export {
   createStation,

@@ -4,24 +4,24 @@ import Complainant from "./Complainant.model.js";
 import Officer from "./Officer.model.js";
 import PoliceStation from "./PoliceStation.model.js";
 import CrimeType from "./CrimeType.model.js";
-import { UUIDV1 } from "sequelize";
+import { UUIDV4 } from "sequelize";
 
 const FIR = sequelize.define("FIR", {
-  fir_id: { type: DataTypes.STRING, defaultValue: UUIDV1, primaryKey: true },
+  fir_id: { type: DataTypes.UUID, defaultValue: UUIDV4, primaryKey: true },
   complainant_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: Complainant, key: "complainant_id" },
   },
   officer_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: Officer, key: "officer_id" },
   },
   station_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: PoliceStation, key: "station_id" },
   },
   type_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: CrimeType, key: "type_id" },
   },
   date_filed: { type: DataTypes.DATE },

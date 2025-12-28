@@ -1,16 +1,16 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 import FIR from "./FIR.model.js";
-import { UUIDV1 } from "sequelize";
+import { UUIDV4 } from "sequelize";
 
 const Suspect = sequelize.define("Suspect", {
   suspect_id: {
-    type: DataTypes.STRING,
-    defaultValue: UUIDV1,
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
     primaryKey: true,
   },
   fir_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     references: { model: FIR, key: "fir_id" },
   },
   name: { type: DataTypes.STRING(100), allowNull: false },
