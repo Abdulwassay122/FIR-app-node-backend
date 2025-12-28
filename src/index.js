@@ -5,20 +5,23 @@ import { app } from "./app.js";
 dotenv.config({
   path: "./.env",
 });
+const port = process.env.PORT || 3000;
 
 // await sequelize
 //   .sync()
 //   .then(() => {
-    // app.get("/", (req, res) => {
-    //   res.send("Neon + Express Connected!");
-    // });
-    app.listen(process.env.PORT, "0.0.0.0", () => {
-      console.log(`Server is running at port : ${process.env.PORT}`);
-    });
-  // })
-  // .catch((err) => {
-  //   console.log("Neon posgre connection failed !!! ", err);
-  // });
+app.get("/", (req, res) => {
+  res.send("MongoDB + Express Connected!");
+});
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`✅ Server running on port ${port}`);
+});
+
+// })
+// .catch((err) => {
+//   console.log("Neon posgre connection failed !!! ", err);
+// });
 
 // // // for vercel
 // import dotenv from "dotenv";
