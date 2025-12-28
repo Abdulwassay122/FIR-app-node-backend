@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
-import { app } from "./app.js";
+// import { app } from "./app.js";
 import sequelize from "./config/db.js";
+import express from "express";
 
 dotenv.config({
   path: "./.env",
@@ -9,6 +10,7 @@ dotenv.config({
 // await sequelize
 //   .sync()
 //   .then(() => {
+const app = express();
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
