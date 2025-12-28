@@ -28,7 +28,6 @@ import sequelize from "./config/db.js";
 
 dotenv.config();
 
-// Reuse DB connection across invocations (important for serverless)
 let dbConnected = false;
 
 async function connectDB() {
@@ -43,8 +42,7 @@ async function connectDB() {
   }
 }
 
-// Vercel serverless handler
 export default async function handler(req, res) {
   await connectDB();
-  app(req, res); // Let Express handle the request
+  app(req, res);
 }
