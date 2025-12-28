@@ -33,7 +33,7 @@ let dbConnected = false;
 async function connectDB() {
   if (!dbConnected) {
     try {
-      await sequelize.authenticate();
+      // await sequelize.authenticate();
       console.log("Database connected!");
       dbConnected = true;
     } catch (err) {
