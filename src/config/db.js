@@ -5,10 +5,10 @@ const sequelize = new Sequelize(process.env.POSTGRES_URI, {
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false
-    }
+      rejectUnauthorized: false,
+    },
   },
-  logging: false
+  logging: false,
 });
 
 export default sequelize;
