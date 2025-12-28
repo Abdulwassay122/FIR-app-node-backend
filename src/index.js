@@ -12,7 +12,7 @@ await sequelize
     app.get("/", (req, res) => {
       res.send("MongoDB + Express Connected!");
     });
-    app.listen(process.env.PORT || 8000, () => {
+    app.listen(process.env.PORT, "0.0.0.0", () => {
       console.log(`Server is running at port : ${process.env.PORT}`);
     });
   })
