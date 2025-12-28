@@ -20,11 +20,11 @@ app.listen(process.env.PORT || 8000, () => {
   console.log(`Server is running at port : ${process.env.PORT}`);
 });
 
-try {
-  await sequelize.sync();
-} catch (error) {
-  console.log(error);
-}
+// try {
+//   await sequelize.sync();
+// } catch (error) {
+//   console.log(error);
+// }
 // })
 // .catch((err) => {
 //   console.log("SQL connection failed !!! ", err);
