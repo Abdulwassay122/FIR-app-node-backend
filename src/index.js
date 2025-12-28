@@ -1,18 +1,24 @@
 import dotenv from "dotenv";
-import { app } from "./app.js";
+// import { app } from "./app.js";
 // import sequelize from "./config/db.js";
+import express from "express";
 
 dotenv.config({
   path: "./.env",
 });
+const app = express();
 const port = process.env.PORT || 3000;
 
-// await sequelize
-//   .sync()
-//   .then(() => {
+
+app.use(express.json());
+
+// Example route
 app.get("/", (req, res) => {
   res.send("MongoDB + Express Connected!");
 });
+// await sequelize
+//   .sync()
+//   .then(() => {
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`✅ Server running on port ${port}`);
