@@ -21,7 +21,6 @@
 //   });
 
 // // for vercel
-
 import dotenv from "dotenv";
 import { app } from "./app.js";
 import sequelize from "./config/db.js";
@@ -30,19 +29,21 @@ dotenv.config();
 
 let dbConnected = false;
 
-async function connectDB() {
-  if (!dbConnected) {
-    try {
-      // await sequelize.authenticate();
+export default async function handler(req, res) {
+  try {
+    if (!dbConnected) {
+      await sequelize.authenticate();
       console.log("Database connected!");
       dbConnected = true;
-    } catch (err) {
-      console.error("Database connection failed:", err);
     }
-  }
-}
 
-export default async function handler(req, res) {
-  await connectDB();
-  app(req, res);
+    app(req, res);
+  } catch (err) {
+    console.error("Serverless handler error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Serverless function crashed",
+      error: err.message,
+    });
+  }
 }
