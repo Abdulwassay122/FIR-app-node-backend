@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-// import { app } from "./app.js";
+import { app } from "./app.js";
 // import sequelize from "./config/db.js";
 
 dotenv.config({
@@ -9,9 +9,9 @@ dotenv.config({
 // await sequelize
 //   .sync()
 //   .then(() => {
-    app.get("/", (req, res) => {
-      res.send("Neon + Express Connected!");
-    });
+    // app.get("/", (req, res) => {
+    //   res.send("Neon + Express Connected!");
+    // });
     app.listen(process.env.PORT, "0.0.0.0", () => {
       console.log(`Server is running at port : ${process.env.PORT}`);
     });
